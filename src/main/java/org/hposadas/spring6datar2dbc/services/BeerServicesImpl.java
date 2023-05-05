@@ -6,6 +6,7 @@ import org.hposadas.spring6datar2dbc.model.BeerDTO;
 import org.hposadas.spring6datar2dbc.repositories.BeerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -46,6 +47,30 @@ public class BeerServicesImpl implements BeerService {
                     beer.setQuantityOnHand(beerDTO.getQuantityOnHand());
                     return beer;
                 }).flatMap(beerRepository::save)
+                .map(beerMapper::beerToBeerDto);
+    }
+
+    @Override
+    public Mono<BeerDTO> patchBeer(Integer beerId, BeerDTO beerDTO) {
+        return beerRepository.findById(beerId)
+                .map(beerFound -> {
+                    if (StringUtils.hasText(beerDTO.getBeerName())){
+                        beerFound.setBeerName(beerDTO.getBeerName());
+                    }
+                    if (StringUtils.hasText(beerDTO.getBeerStyle())) {
+                        beerFound.setBeerStyle(beerDTO.getBeerStyle());
+                    }
+                    if (beerDTO.getPrice() != null) {
+                        beerFound.setPrice(beerDTO.getPrice());
+                    }
+                    if (StringUtils.hasText(beerDTO.getUpc())) {
+                        beerFound.setUpc(beerDTO.getUpc());
+                    }
+                    if (beerDTO.getQuantityOnHand() != null){
+                        beerFound.setQuantityOnHand(beerDTO.getQuantityOnHand());
+                    }
+                    return beerFound;
+                }).flatMap(beerModif -> beerRepository.save(beerModif))
                 .map(beerMapper::beerToBeerDto);
     }
 }
