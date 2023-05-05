@@ -5,6 +5,7 @@ import org.hposadas.spring6datar2dbc.mappers.BeerMapper;
 import org.hposadas.spring6datar2dbc.model.BeerDTO;
 import org.hposadas.spring6datar2dbc.repositories.BeerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
@@ -72,5 +73,10 @@ public class BeerServicesImpl implements BeerService {
                     return beerFound;
                 }).flatMap(beerModif -> beerRepository.save(beerModif))
                 .map(beerMapper::beerToBeerDto);
+    }
+
+    @Override
+    public Mono<Void> deleteBeer(Integer beerId) {
+        return beerRepository.deleteById(beerId);
     }
 }

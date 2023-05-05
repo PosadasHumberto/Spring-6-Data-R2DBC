@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.hposadas.spring6datar2dbc.model.BeerDTO;
 import org.hposadas.spring6datar2dbc.services.BeerService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
@@ -28,7 +29,8 @@ public class BeerController {
     }
 
     @PostMapping(BEER_PATH)
-    Mono<ResponseEntity<Void>> createNewBeer(@RequestBody BeerDTO beerDTO) {
+    Mono<ResponseEntity<Void>> createNewBeer(
+            @Validated @RequestBody BeerDTO beerDTO) {
         return beerService.saveNewBeer(beerDTO)
                 .map(savedDto -> ResponseEntity.created(UriComponentsBuilder
                         .fromHttpUrl("http://localhost:8080/" + BEER_PATH + "/"
@@ -39,7 +41,7 @@ public class BeerController {
     @PutMapping(BEER_PATH_ID)
     Mono<ResponseEntity<Void>> updateBeerById(
             @PathVariable("beerId") Integer beerId,
-            @RequestBody BeerDTO beerDTO){
+            @Validated @RequestBody BeerDTO beerDTO){
 
         return beerService.updateBeer(beerId, beerDTO)
                 .map(beer -> ResponseEntity.ok().build());
@@ -48,9 +50,15 @@ public class BeerController {
     @PatchMapping(BEER_PATH_ID)
     Mono<ResponseEntity<Void>> patchExistingBeer(
             @PathVariable("beerId") Integer beerId,
-            @RequestBody BeerDTO beerDTO
+            @Validated @RequestBody BeerDTO beerDTO
     ) {
         return beerService.patchBeer(beerId, beerDTO)
                 .map(patchedDto -> ResponseEntity.ok().build());
+    }
+
+    @DeleteMapping(BEER_PATH_ID)
+    Mono<ResponseEntity<Void>> deleteBeer(@PathVariable("beerId") Integer beerId) {
+        return beerService.deleteBeer(beerId)
+                .map(response -> ResponseEntity.noContent().build());
     }
 }
