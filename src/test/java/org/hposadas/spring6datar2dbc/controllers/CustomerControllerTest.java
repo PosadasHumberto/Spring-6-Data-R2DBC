@@ -64,6 +64,16 @@ class CustomerControllerTest {
     }
 
     @Test
+    void testPatchBeer() {
+        webTestClient.patch().uri(CustomerController.CUSTOMER_PATH_ID,1)
+                .body(Mono.just(CustomerRepositoryTest.getTestCustomer()), CustomerDTO.class)
+                .header("Content-type", "application/json")
+                .exchange()
+                .expectStatus().isNoContent();
+    }
+
+
+    @Test
     @Order(5)
     void testDeleteCustomer() {
         webTestClient.delete().uri(CustomerController.CUSTOMER_PATH_ID, 1)
