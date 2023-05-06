@@ -65,9 +65,20 @@ class BeerControllerTest {
 
     @Test
     @Order(5)
+    void testPatchBeer() {
+        webTestClient.patch().uri(BeerController.BEER_PATH_ID, 1)
+                .body(Mono.just(BeerRepositoryTest.getTestBeer()), BeerDTO.class)
+                .header("Content-type", "application/json")
+                .exchange()
+                .expectStatus().isNoContent();
+    }
+
+    @Test
+    @Order(6)
     void testDeleteBeer() {
         webTestClient.delete().uri(BeerController.BEER_PATH_ID, 1)
                 .exchange()
                 .expectStatus().isNoContent();
     }
+
 }
