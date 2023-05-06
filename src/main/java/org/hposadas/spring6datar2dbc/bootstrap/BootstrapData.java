@@ -2,7 +2,9 @@ package org.hposadas.spring6datar2dbc.bootstrap;
 
 import lombok.RequiredArgsConstructor;
 import org.hposadas.spring6datar2dbc.domain.Beer;
+import org.hposadas.spring6datar2dbc.domain.Customer;
 import org.hposadas.spring6datar2dbc.repositories.BeerRepository;
+import org.hposadas.spring6datar2dbc.repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,9 @@ public class BootstrapData implements CommandLineRunner {
 
     @Autowired
     private final BeerRepository beerRepository;
+
+    @Autowired
+    private final CustomerRepository customerRepository;
 
 
     @Override
@@ -60,8 +65,28 @@ public class BootstrapData implements CommandLineRunner {
                 beerRepository.save(beer1).subscribe();
                 beerRepository.save(beer2).subscribe();
                 beerRepository.save(beer3).subscribe();
-
             }
         });
+
+        customerRepository.count().subscribe(count -> {
+            if (count == 0){
+                Customer customer1 = Customer.builder()
+                        .customerName("Valentin Elizalde")
+                        .build();
+
+                Customer customer2 = Customer.builder()
+                        .customerName("Sergio Vega")
+                        .build();
+
+                Customer customer3 = Customer.builder()
+                        .customerName("Joan Sebastian")
+                        .build();
+
+                customerRepository.save(customer1).subscribe();
+                customerRepository.save(customer2).subscribe();
+                customerRepository.save(customer3).subscribe();
+            }
+        });
+
     }
 }

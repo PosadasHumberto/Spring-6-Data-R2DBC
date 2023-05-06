@@ -5,7 +5,6 @@ import org.hposadas.spring6datar2dbc.mappers.BeerMapper;
 import org.hposadas.spring6datar2dbc.model.BeerDTO;
 import org.hposadas.spring6datar2dbc.repositories.BeerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import reactor.core.publisher.Flux;
