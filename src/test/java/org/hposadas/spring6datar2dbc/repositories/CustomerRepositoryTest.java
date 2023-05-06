@@ -11,16 +11,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @DataR2dbcTest
 @Import(DatabaseConfig.class)
-class CustomerRepositoryTest {
+public class CustomerRepositoryTest {
 
     @Autowired
     CustomerRepository customerRepository;
 
     @Test
     void testSaveNewCustomer() {
-        Customer c = Customer.builder().customerName("Test Customer").build();
+        Customer c = getTestCustomer();
         customerRepository.save(c).subscribe(customer -> System.out.println(customer.toString()));
         customerRepository.count().subscribe(System.out::println);
+    }
 
+    public static Customer getTestCustomer() {
+        return Customer.builder().customerName("Test Customer").build();
     }
 }
