@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Mono;
 
+import static org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockOAuth2Login;
+
 @SpringBootTest
 @AutoConfigureWebTestClient
 public class CustomerControllerExceptionHandlerTest {
@@ -21,7 +23,9 @@ public class CustomerControllerExceptionHandlerTest {
 
     @Test
     void testGetCustomerByIdNotFound() {
-        webTestClient.get().uri(CustomerController.CUSTOMER_PATH_ID, 99)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .get().uri(CustomerController.CUSTOMER_PATH_ID, 99)
                 .exchange()
                 .expectStatus().isNotFound();
     }
@@ -31,7 +35,9 @@ public class CustomerControllerExceptionHandlerTest {
         Customer testCustomer = CustomerRepositoryTest.getTestCustomer();
         testCustomer.setCustomerName("");
 
-        webTestClient.post().uri(CustomerController.CUSTOMER_PATH)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .post().uri(CustomerController.CUSTOMER_PATH)
                 .body(Mono.just(testCustomer), CustomerDTO.class)
                 .header("Content-type", "application/json")
                 .exchange()
@@ -43,7 +49,9 @@ public class CustomerControllerExceptionHandlerTest {
         Customer testCustomer = CustomerRepositoryTest.getTestCustomer();
         testCustomer.setCustomerName("");
 
-        webTestClient.put().uri(CustomerController.CUSTOMER_PATH_ID,1)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .put().uri(CustomerController.CUSTOMER_PATH_ID,1)
                 .body(Mono.just(testCustomer), CustomerDTO.class)
                 .header("Content-type", "application/json")
                 .exchange()
@@ -52,7 +60,9 @@ public class CustomerControllerExceptionHandlerTest {
 
     @Test
     void testUpdateCustomerNotFound() {
-        webTestClient.put().uri(CustomerController.CUSTOMER_PATH_ID,99)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .put().uri(CustomerController.CUSTOMER_PATH_ID,99)
                 .body(Mono.just(CustomerRepositoryTest.getTestCustomer()), CustomerDTO.class)
                 .header("Content-type", "application/json")
                 .exchange()
@@ -61,7 +71,9 @@ public class CustomerControllerExceptionHandlerTest {
 
     @Test
     void testPatchBeerNotFound() {
-        webTestClient.patch().uri(CustomerController.CUSTOMER_PATH_ID,99)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .patch().uri(CustomerController.CUSTOMER_PATH_ID,99)
                 .body(Mono.just(CustomerRepositoryTest.getTestCustomer()), CustomerDTO.class)
                 .header("Content-type", "application/json")
                 .exchange()
@@ -70,7 +82,9 @@ public class CustomerControllerExceptionHandlerTest {
 
     @Test
     void testDeleteCustomer() {
-        webTestClient.delete().uri(CustomerController.CUSTOMER_PATH_ID, 99)
+        webTestClient
+                .mutateWith(mockOAuth2Login())
+                .delete().uri(CustomerController.CUSTOMER_PATH_ID, 99)
                 .exchange()
                 .expectStatus().isNotFound();
     }

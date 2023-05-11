@@ -58,7 +58,7 @@ public class CustomerController {
     ) {
         return customerService.patchCustomer(customerId, customerDTO)
                 .switchIfEmpty(Mono.error(new ResponseStatusException(HttpStatus.NOT_FOUND)))
-                .map(customer -> ResponseEntity.ok().build());
+                .map(customer -> ResponseEntity.noContent().build());
     }
 
     @DeleteMapping(CUSTOMER_PATH_ID)
